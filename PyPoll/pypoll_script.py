@@ -16,9 +16,9 @@ file_to_output = os.path.join("analysis", "election_analysis.txt")  # Output fil
 total_votes = 0  # Track the total number of votes cast
 
 # Define lists and dictionaries to track candidate names and vote counts
-candidate_Info_Tracker = {}
-unique_Candidates = []
-temp_Candidate_Name = ""  # temporary holder for a candidate's name to add to list of unique candidates
+candidate_Info_Tracker = {} # Dictionary that holds a candidate's name and a count of each vote they receive
+unique_Candidates = [] # Tracker for each unique candidate name
+temp_Candidate_Name = ""  # Temporary holder for a candidate's name to add to list of unique candidates
 
 # Winning Candidate and Winning Count Tracker
 winning_Candidate_Info = {"Name": "",
@@ -35,7 +35,7 @@ with open(file_to_load, encoding='UTF-8') as election_data:
     for row in reader:
 
         # Print a loading indicator (for large datasets)
-        #print(". ", end="")
+        print(". ", end="")
 
         # Increment the total vote count for each row
         total_votes = total_votes + 1
@@ -43,17 +43,14 @@ with open(file_to_load, encoding='UTF-8') as election_data:
         # Get the candidate's name from the row
         temp_Candidate_Name = row[2]
 
-        # If the candidate is not already in the candidate list, add them
+        # If the candidate is not already in the candidate list, add their name to the unique candidate name tracker.
+        # Also, add their name to the candidate info dictionary and initialize the value tied to their name to 0
         if temp_Candidate_Name not in unique_Candidates:
             unique_Candidates.append(temp_Candidate_Name)
             candidate_Info_Tracker[temp_Candidate_Name] = 0 
         
-        # Add a vote to the candidate's count
+        # Add a vote to the candidate's count in their dictionary entry
         candidate_Info_Tracker[temp_Candidate_Name] = candidate_Info_Tracker[temp_Candidate_Name] + 1   
-
-# Test print statements
-#print(total_votes)
-#print(candidate_Info_Tracker)
 
 # Open a text file to save the output
 with open(file_to_output, "w") as txt_file:
@@ -78,14 +75,14 @@ with open(file_to_output, "w") as txt_file:
     txt_file.write("\n")
     txt_file.write("------------------------------------------------" + "\n")
 
-    # Loop through the candidates to determine vote percentages and identify the winner
+    # Loop through the candidates in the candidate dictionary to determine vote percentages and identify the winner
     for candidate in candidate_Info_Tracker:
 
         # Get the vote count and calculate the percentage
         temp_Votes = candidate_Info_Tracker[candidate]
         temp_Percentage = (temp_Votes / total_votes) * 100
 
-        # Update the winning candidate if this one has more votes
+        # Update the winning candidate dictionary if this current candidate has more votes
         if temp_Votes > winning_Candidate_Info["Votes"]:
             winning_Candidate_Info["Name"] = candidate
             winning_Candidate_Info["Votes"] = temp_Votes
